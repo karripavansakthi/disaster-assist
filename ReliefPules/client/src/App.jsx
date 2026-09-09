@@ -16,6 +16,9 @@ import EmergencyRequest from './pages/EmergencyRequest';
 import Shelters from './pages/Shelters';
 import Resources from './pages/Resources';
 import DisasterAlerts from './pages/DisasterAlerts';
+import MedicalHelp from './pages/MedicalHelp';
+import SafetyAssistant from './pages/SafetyAssistant';
+import MobileBottomNav from './components/MobileBottomNav';
 
 // Victim Pages
 import VictimDashboard from './pages/VictimDashboard';
@@ -66,6 +69,8 @@ export default function App() {
         <Route path="/shelters" element={<Shelters />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/food-medical" element={<Resources />} />
+        <Route path="/medical" element={<MedicalHelp />} />
+        <Route path="/safety" element={<SafetyAssistant />} />
         <Route path="/alerts" element={<DisasterAlerts />} />
 
         {/* Smart Dashboard Redirect */}
@@ -81,6 +86,8 @@ export default function App() {
         <Route path="/victim/emergency-request" element={<EmergencyRequest />} />
         <Route path="/victim/shelters" element={<Shelters />} />
         <Route path="/victim/resources" element={<Resources />} />
+        <Route path="/victim/medical" element={<MedicalHelp />} />
+        <Route path="/victim/safety" element={<SafetyAssistant />} />
         <Route path="/victim/alerts" element={<DisasterAlerts />} />
         <Route path="/victim/history" element={<VictimHistory />} />
         <Route path="/victim/profile" element={<UserProfile />} />
@@ -91,6 +98,7 @@ export default function App() {
         <Route path="/volunteer/available" element={<VolunteerAvailable />} />
         <Route path="/volunteer/shelters" element={<Shelters />} />
         <Route path="/volunteer/resources" element={<Resources />} />
+        <Route path="/volunteer/medical" element={<MedicalHelp />} />
         <Route path="/volunteer/messages" element={<VolunteerMessages />} />
         <Route path="/volunteer/profile" element={<UserProfile />} />
 
@@ -112,6 +120,9 @@ export default function App() {
 
       {/* Global SOS Emergency Chatbox */}
       <SOSChatbox />
+
+      {/* Global Mobile Bottom Navigation Bar with Pulse SOS Button */}
+      <MobileBottomNav />
     </>
   );
 }

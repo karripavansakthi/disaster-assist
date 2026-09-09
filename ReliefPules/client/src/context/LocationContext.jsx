@@ -352,3 +352,7 @@ export function useLocationContext() {
   }
   return context;
 }
+
+// Alias for convenience
+export const useLocation = useLocationContext;
+

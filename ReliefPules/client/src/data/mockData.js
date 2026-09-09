@@ -452,7 +452,149 @@ const STORAGE_KEYS = {
   ALERTS: 'da_alerts',
   VOLUNTEERS: 'da_volunteers',
   USERS: 'da_users',
+  HOSPITALS: 'da_hospitals',
+  RESCUE_TEAMS: 'da_rescue_teams',
+  NOTIFICATIONS: 'da_notifications',
+  SIMULATION: 'da_simulation_state'
 };
+
+export const INITIAL_HOSPITALS = [
+  {
+    id: 'hosp-1',
+    name: 'District Government General Hospital',
+    type: 'Tertiary Trauma Center',
+    distance: '1.4 km',
+    distanceNum: 1.4,
+    address: 'Hospital Road, Sector 3, Central Hub',
+    lat: 17.3942,
+    lng: 78.4891,
+    emergencyAvailable: true,
+    availableBeds: 42,
+    totalBeds: 350,
+    icuBeds: 8,
+    ambulancesActive: 6,
+    specialties: ['Trauma Surgery', 'ICU Care', 'Burn Unit', 'Pediatrics'],
+    contactPhone: '+91 40 2345 9111',
+    status: 'Open 24/7',
+    image: 'https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'hosp-2',
+    name: 'Apollo Disaster Emergency Annex',
+    type: 'Super Specialty Hospital',
+    distance: '2.6 km',
+    distanceNum: 2.6,
+    address: 'Old Jubilee Highway, Ward 6',
+    lat: 17.4015,
+    lng: 78.4712,
+    emergencyAvailable: true,
+    availableBeds: 28,
+    totalBeds: 200,
+    icuBeds: 12,
+    ambulancesActive: 4,
+    specialties: ['Cardiology', 'Orthopedics', 'Emergency Medicine'],
+    contactPhone: '+91 40 2345 9222',
+    status: 'Open 24/7',
+    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=600&q=80'
+  },
+  {
+    id: 'hosp-3',
+    name: 'Red Cross Mobile Field Clinic #4',
+    type: 'Emergency Field Triage Camp',
+    distance: '0.9 km',
+    distanceNum: 0.9,
+    address: 'Municipal Ground, Sector 1, Flood Buffer Zone',
+    lat: 17.3820,
+    lng: 78.4815,
+    emergencyAvailable: true,
+    availableBeds: 65,
+    totalBeds: 100,
+    icuBeds: 4,
+    ambulancesActive: 3,
+    specialties: ['Wound Dressing', 'Dehydration Triage', 'Waterborne Disease Control'],
+    contactPhone: '+91 40 2345 9333',
+    status: 'High Readiness',
+    image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80'
+  }
+];
+
+export const INITIAL_RESCUE_TEAMS = [
+  {
+    id: 'team-alpha',
+    teamId: 'Rescue Team Alpha',
+    leaderName: 'Commander Rajesh Varma',
+    contactPhone: '+91 98490 12345',
+    membersCount: 8,
+    specialty: 'Water Evacuation & Boat Rescue',
+    status: 'En Route',
+    assignedRequestId: 'REQ1024',
+    lat: 17.3870,
+    lng: 78.4820
+  },
+  {
+    id: 'team-bravo',
+    teamId: 'Medical Triage Unit Bravo',
+    leaderName: 'Dr. Shalini Sen',
+    contactPhone: '+91 98490 23456',
+    membersCount: 5,
+    specialty: 'Critical First Aid & Trauma Stabilization',
+    status: 'Available',
+    assignedRequestId: null,
+    lat: 17.3920,
+    lng: 78.4890
+  },
+  {
+    id: 'team-charlie',
+    teamId: 'Civil Defense Evacuation Charlie',
+    leaderName: 'Inspector K. Murthy',
+    contactPhone: '+91 98490 34567',
+    membersCount: 12,
+    specialty: 'High-Water Truck & Relief Convoys',
+    status: 'On Mission',
+    assignedRequestId: 'REQ1007',
+    lat: 17.3750,
+    lng: 78.4710
+  }
+];
+
+export const INITIAL_NOTIFICATIONS = [
+  {
+    id: 'notif-1',
+    type: 'emergency',
+    title: 'Emergency Request Created',
+    message: 'Request #REQ1024 (Flood, Critical) submitted in Ward 7.',
+    timeAgo: '5 min ago',
+    read: false,
+    link: '/victim/dashboard'
+  },
+  {
+    id: 'notif-2',
+    type: 'dispatch',
+    title: 'Rescue Team Dispatched',
+    message: 'Rescue Team Alpha is en route to River View Enclave (ETA 18m).',
+    timeAgo: '12 min ago',
+    read: false,
+    link: '/victim/dashboard'
+  },
+  {
+    id: 'notif-3',
+    type: 'shelter',
+    title: 'Safe Haven Relief Center Active',
+    message: 'Safe Haven has 173 beds remaining with active medical triage.',
+    timeAgo: '25 min ago',
+    read: true,
+    link: '/shelters'
+  },
+  {
+    id: 'notif-4',
+    type: 'alert',
+    title: 'Active Cyclone Surge Alert',
+    message: 'IMD Red Alert issued for coastal inundation and gale-force gusts.',
+    timeAgo: '1 hour ago',
+    read: true,
+    link: '/alerts'
+  }
+];
 
 export const getStoredData = (key, fallback) => {
   try {
@@ -498,39 +640,269 @@ export const getAlerts = () => getStoredData(STORAGE_KEYS.ALERTS, INITIAL_ALERTS
 export const saveAlerts = (alerts) => setStoredData(STORAGE_KEYS.ALERTS, alerts);
 
 export const getVolunteers = () => getStoredData(STORAGE_KEYS.VOLUNTEERS, INITIAL_VOLUNTEERS);
-export const getUsers = () => getStoredData(STORAGE_KEYS.USERS, INITIAL_USERS);
+export const saveVolunteers = (vols) => setStoredData(STORAGE_KEYS.VOLUNTEERS, vols);
 
-// Convenience function to create a new emergency request
+export const getUsers = () => getStoredData(STORAGE_KEYS.USERS, INITIAL_USERS);
+export const saveUsers = (users) => setStoredData(STORAGE_KEYS.USERS, users);
+
+export const getHospitals = () => getStoredData(STORAGE_KEYS.HOSPITALS, INITIAL_HOSPITALS);
+export const saveHospitals = (hosps) => setStoredData(STORAGE_KEYS.HOSPITALS, hosps);
+
+export const getRescueTeams = () => getStoredData(STORAGE_KEYS.RESCUE_TEAMS, INITIAL_RESCUE_TEAMS);
+export const saveRescueTeams = (teams) => setStoredData(STORAGE_KEYS.RESCUE_TEAMS, teams);
+
+export const getNotifications = () => getStoredData(STORAGE_KEYS.NOTIFICATIONS, INITIAL_NOTIFICATIONS);
+export const saveNotifications = (notifs) => setStoredData(STORAGE_KEYS.NOTIFICATIONS, notifs);
+
+export const addNotification = (notif) => {
+  const current = getNotifications();
+  const newItem = {
+    id: `notif-${Date.now()}`,
+    timeAgo: 'Just now',
+    read: false,
+    ...notif
+  };
+  saveNotifications([newItem, ...current]);
+  return newItem;
+};
+
+export const markNotificationRead = (id) => {
+  const current = getNotifications();
+  const updated = current.map((n) => (n.id === id ? { ...n, read: true } : n));
+  saveNotifications(updated);
+};
+
+export const markAllNotificationsRead = () => {
+  const current = getNotifications();
+  saveNotifications(current.map((n) => ({ ...n, read: true })));
+};
+
+// AI Emergency Triage Analyzer
+export const runAiTriage = ({
+  type = 'Flood',
+  peopleAffected = 1,
+  adults = 1,
+  children = 0,
+  elderly = 0,
+  injuries = false,
+  medicalNeeds = false,
+  requiredAssistance = [],
+  location = ''
+}) => {
+  let score = 0;
+  const reasons = [];
+  const recommendedResponse = [];
+
+  // Severity by disaster type
+  if (['Flood', 'Earthquake', 'Fire', 'Cyclone', 'Tsunami', 'Landslide'].includes(type)) {
+    score += 35;
+    reasons.push(`High-hazard environmental emergency (${type})`);
+  } else if (type === 'Medical') {
+    score += 30;
+    reasons.push('Direct acute medical distress reported');
+  } else {
+    score += 15;
+  }
+
+  // Demographics Vulnerability
+  const vulnerableCount = (Number(children) || 0) + (Number(elderly) || 0);
+  if (vulnerableCount > 0) {
+    score += 25;
+    reasons.push(`${vulnerableCount} high-vulnerability individual(s) present (children/elderly)`);
+  }
+  if (Number(peopleAffected) >= 4) {
+    score += 20;
+    reasons.push(`Group of ${peopleAffected} persons trapped or requiring evacuation`);
+  }
+
+  // Medical / Injury conditions
+  if (injuries || medicalNeeds || (Array.isArray(requiredAssistance) && requiredAssistance.includes('Medical'))) {
+    score += 30;
+    reasons.push('Urgent trauma or critical medical assistance flagged');
+    recommendedResponse.push('🏥 Rapid Medical Triage Unit');
+  }
+
+  // Search and rescue
+  if ((Array.isArray(requiredAssistance) && requiredAssistance.includes('Rescue')) || ['Flood', 'Fire', 'Landslide'].includes(type)) {
+    recommendedResponse.push('🚑 Emergency Search & Rescue Team');
+  }
+
+  // Shelter & sustenance
+  if (Array.isArray(requiredAssistance) && requiredAssistance.includes('Shelter')) {
+    recommendedResponse.push('🏠 Safe Evacuation Shelter Placement');
+  }
+  if (Array.isArray(requiredAssistance) && (requiredAssistance.includes('Food') || requiredAssistance.includes('Water'))) {
+    recommendedResponse.push('🍱 Emergency Sustenance Kit Distribution');
+  }
+
+  if (recommendedResponse.length === 0) {
+    recommendedResponse.push('👥 Community First Responder Volunteer');
+  }
+
+  let priority = 'Low';
+  let badgeColor = 'emerald';
+  if (score >= 70) {
+    priority = 'Critical';
+    badgeColor = 'red';
+  } else if (score >= 45) {
+    priority = 'High';
+    badgeColor = 'orange';
+  } else if (score >= 25) {
+    priority = 'Medium';
+    badgeColor = 'amber';
+  }
+
+  return {
+    priority,
+    score,
+    badgeColor,
+    reason: reasons.length > 0 ? reasons.join('. ') + '.' : 'Standard relief priority assigned based on distress report.',
+    recommendedResponse,
+    triageTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    decisionSupportNote: 'AI-assisted decision support recommendation. Confirm on-site during first contact.'
+  };
+};
+
+// Simulation State Engine for Live Presentations & Evaluations
+export const getSimulationState = () => {
+  return getStoredData(STORAGE_KEYS.SIMULATION, {
+    active: false,
+    paused: false,
+    disasterType: 'Cyclone',
+    severity: 'High',
+    affectedArea: 'Coastal Andhra & Eastern Buffer Zone',
+    tickCount: 0,
+    metrics: {
+      addedRequests: 0,
+      addedVictims: 0,
+      shelterOccupancyDelta: 0,
+      assignedVolunteers: 0
+    }
+  });
+};
+
+export const setSimulationState = (state) => {
+  setStoredData(STORAGE_KEYS.SIMULATION, state);
+};
+
+export const startSimulation = (disasterType = 'Cyclone') => {
+  const current = getSimulationState();
+  const newState = {
+    ...current,
+    active: true,
+    paused: false,
+    disasterType,
+    severity: disasterType === 'Cyclone' ? 'High' : disasterType === 'Flood' ? 'Critical' : 'High',
+    affectedArea: disasterType === 'Cyclone' ? 'Coastal Belt & Port Sector' : disasterType === 'Flood' ? 'River Basin & Lowland Colonies' : 'Urban Fault Zone'
+  };
+  setSimulationState(newState);
+
+  addNotification({
+    type: 'alert',
+    title: `LIVE SIMULATION STARTED: ${disasterType}`,
+    message: `Controlled disaster drill active for ${newState.affectedArea}. Live metrics updating.`,
+    link: '/admin/dashboard'
+  });
+
+  return newState;
+};
+
+export const pauseSimulation = () => {
+  const current = getSimulationState();
+  const newState = { ...current, paused: !current.paused };
+  setSimulationState(newState);
+  return newState;
+};
+
+export const resetSimulation = () => {
+  const resetState = {
+    active: false,
+    paused: false,
+    disasterType: 'Cyclone',
+    severity: 'High',
+    affectedArea: 'Coastal Andhra & Eastern Buffer Zone',
+    tickCount: 0,
+    metrics: {
+      addedRequests: 0,
+      addedVictims: 0,
+      shelterOccupancyDelta: 0,
+      assignedVolunteers: 0
+    }
+  };
+  setSimulationState(resetState);
+
+  // Restore baseline mock data
+  saveRequests(INITIAL_REQUESTS);
+  saveShelters(INITIAL_SHELTERS);
+  saveResources(INITIAL_RESOURCES);
+
+  addNotification({
+    type: 'alert',
+    title: 'Simulation Reset',
+    message: 'Disaster simulation drill cleared. Returned to standard baseline operational data.',
+    link: '/admin/dashboard'
+  });
+
+  return resetState;
+};
+
+// Convenience function to create a new emergency request with AI triage
 export const createEmergencyRequest = (formData) => {
   const existing = getRequests();
   const nextNum = 1025 + existing.length - INITIAL_REQUESTS.length;
   const newId = `REQ${nextNum}`;
+
+  // Execute AI Triage Analysis
+  const triageResult = runAiTriage({
+    type: formData.type || 'Flood',
+    peopleAffected: Number(formData.peopleAffected) || 1,
+    adults: formData.adults || 1,
+    children: formData.children || 0,
+    elderly: formData.elderly || 0,
+    injuries: formData.injuries || false,
+    medicalNeeds: formData.medicalNeeds || false,
+    requiredAssistance: formData.requiredAssistance || ['Rescue'],
+    location: formData.location || ''
+  });
   
   const newRequest = {
     id: newId,
     type: formData.type || 'Flood',
-    priority: formData.priority || 'Critical',
+    priority: formData.priority || triageResult.priority,
+    aiTriage: triageResult,
     status: 'Pending',
-    assignedTeam: '-',
-    assignedVolunteer: '-',
-    victimName: formData.name || 'Ramesh Kumar',
+    assignedTeam: formData.assignedTeam || '-',
+    assignedVolunteer: formData.assignedVolunteer || '-',
+    victimName: formData.name || 'Citizen Requester',
+    phone: formData.phone || '+91 98765 43210',
     peopleAffected: Number(formData.peopleAffected) || 1,
     details: formData.details || '',
-    location: formData.location || '17.3850, 78.4867 (Live GPS)',
-    lat: 17.3850 + (Math.random() - 0.5) * 0.02,
-    lng: 78.4867 + (Math.random() - 0.5) * 0.02,
+    location: formData.location || '17.3850, 78.4867 (Verified GPS)',
+    lat: formData.lat || 17.3850 + (Math.random() - 0.5) * 0.02,
+    lng: formData.lng || 78.4867 + (Math.random() - 0.5) * 0.02,
     distance: '0.8 km',
     timeAgo: 'Just now',
     requiredAssistance: formData.requiredAssistance || ['Rescue'],
     timeline: [
       { title: 'Request Received', time: 'Just now', done: true },
-      { title: 'Volunteer Assigned', time: 'Dispatching...', current: true },
-      { title: 'Assistance Arriving', time: 'Pending', done: false },
-      { title: 'Completed', time: 'Pending', done: false }
+      { title: 'AI Triage Completed', time: `Priority: ${triageResult.priority}`, done: true },
+      { title: 'Rescue Team Assigned', time: 'Pending Dispatch', current: true },
+      { title: 'Team En Route', time: 'Pending', done: false },
+      { title: 'Assistance Arrived', time: 'Pending', done: false },
+      { title: 'Request Resolved', time: 'Pending', done: false }
     ]
   };
 
   const updated = [newRequest, ...existing];
   saveRequests(updated);
+
+  addNotification({
+    type: 'emergency',
+    title: `Emergency Request Created (${newRequest.priority})`,
+    message: `${newRequest.type} reported at ${newRequest.location} for ${newRequest.peopleAffected} person(s).`,
+    link: '/victim/dashboard'
+  });
+
   return newRequest;
 };
+

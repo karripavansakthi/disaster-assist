@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import InteractiveMapCard from '../components/InteractiveMapCard';
+import EmergencyTrackingView from '../components/EmergencyTrackingView';
 import { useAuth } from '../context/AuthContext';
 import { getRequests, getShelters } from '../data/mockData';
 import {
@@ -125,81 +126,15 @@ export default function VictimDashboard() {
           </div>
         </div>
 
-        {/* Lower Two Cards Grid: Emergency Status & Nearby Shelters */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* LEFT CARD: Emergency Status (Vertical Timeline) */}
-          <div className="bg-white rounded-xl p-6 border border-[#E4EAF2] shadow-sm">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
-              <h3 className="text-base font-bold text-[#172B4D]">Emergency Status</h3>
-              <span className="text-[11px] font-bold text-[#F52D3D] bg-red-50 px-2.5 py-0.5 rounded-full border border-red-100">
-                Live Tracking
-              </span>
-            </div>
-
-            {/* Vertical Timeline */}
-            <div className="space-y-6 relative pl-3">
-              {/* Vertical line connecting nodes */}
-              <div className="absolute left-[23px] top-3 bottom-6 w-0.5 bg-slate-200" />
-
-              {timelineSteps.map((step, idx) => (
-                <div key={step.title} className="relative flex items-start gap-4">
-                  {/* Node icon */}
-                  {step.completed ? (
-                    <div className="w-6 h-6 rounded-full bg-[#20A464] text-white flex items-center justify-center shrink-0 z-10 ring-4 ring-white shadow-xs">
-                      <CheckCircle2 className="w-4 h-4" />
-                    </div>
-                  ) : step.inProgress ? (
-                    <div className="w-6 h-6 rounded-full bg-[#1268E8] text-white flex items-center justify-center shrink-0 z-10 ring-4 ring-white shadow-xs animate-pulse">
-                      <span className="w-2.5 h-2.5 rounded-full bg-white"></span>
-                    </div>
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center shrink-0 z-10 ring-4 ring-white">
-                      <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-                    </div>
-                  )}
-
-                  {/* Content */}
-                  <div className="flex-1 -mt-0.5">
-                    <div className="flex items-center justify-between">
-                      <div className="text-xs sm:text-sm font-bold text-[#172B4D]">
-                        {step.title}
-                      </div>
-                      {step.inProgress && (
-                        <span className="text-[11px] font-bold text-[#1268E8] bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
-                          In Progress
-                        </span>
-                      )}
-                      {step.pending && (
-                        <span className="text-[11px] font-medium text-slate-400">
-                          Pending
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs text-[#667085] mt-0.5">
-                      {step.time}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Emergency Hotline Assistance Banner */}
-            <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2 text-[#667085]">
-                <Shield className="w-4 h-4 text-[#1268E8]" />
-                <span>Assigned Responder: Suresh (Rescue Lead)</span>
-              </div>
-              <a
-                href="tel:112"
-                className="text-xs font-bold text-[#F52D3D] hover:underline flex items-center gap-1"
-              >
-                <Phone className="w-3.5 h-3.5" /> Call Team
-              </a>
-            </div>
+        {/* Lower Two Cards Grid: Emergency Status Tracking & Nearby Shelters */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* LEFT CARD: Live Emergency Tracking & AI Triage (7 cols) */}
+          <div className="lg:col-span-7">
+            <EmergencyTrackingView request={activeRequest} />
           </div>
 
           {/* RIGHT CARD: Nearby Shelters */}
-          <div className="bg-white rounded-xl p-6 border border-[#E4EAF2] shadow-sm flex flex-col">
+          <div className="lg:col-span-5 bg-white rounded-xl p-6 border border-[#E4EAF2] shadow-sm flex flex-col">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <h3 className="text-base font-bold text-[#172B4D]">Nearby Shelters</h3>
               <Link
