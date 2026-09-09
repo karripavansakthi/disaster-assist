@@ -10,7 +10,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import About from './pages/About';
 import Showcase from './pages/Showcase';
-import SOSChatbox from './components/SOSChatbox';
 
 // Functional Pages
 import EmergencyRequest from './pages/EmergencyRequest';
@@ -119,10 +118,7 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* Global SOS Emergency Chatbox */}
-      <SOSChatbox />
-
-      {/* Global Mobile Bottom Navigation Bar with Pulse SOS Button */}
+      {/* Global Mobile Bottom Navigation Bar */}
       <MobileBottomNav />
     </ErrorBoundary>
   );
