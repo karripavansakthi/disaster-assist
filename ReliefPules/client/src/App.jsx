@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Public & Auth Pages
 import Home from './pages/Home';
@@ -53,7 +54,7 @@ function DashboardRedirect() {
 
 export default function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Routes>
         {/* Public Pages */}
         <Route path="/" element={<Home />} />
@@ -123,6 +124,6 @@ export default function App() {
 
       {/* Global Mobile Bottom Navigation Bar with Pulse SOS Button */}
       <MobileBottomNav />
-    </>
+    </ErrorBoundary>
   );
 }

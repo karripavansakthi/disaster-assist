@@ -38,6 +38,18 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const toSafeString = (val, fallback = '') => {
+  if (typeof val === 'string') return val;
+  if (typeof val === 'number') return String(val);
+  if (typeof val === 'object' && val !== null) {
+    if (val.disasterType) return toSafeString(val.disasterType, fallback);
+    if (val.severity) return toSafeString(val.severity, fallback);
+    if (val.name) return toSafeString(val.name, fallback);
+    if (val.type) return toSafeString(val.type, fallback);
+  }
+  return fallback;
+};
+
 export default function AdminDashboard() {
   const [requests, setRequests] = useState([]);
   const [shelters, setShelters] = useState([]);
@@ -230,23 +242,25 @@ export default function AdminDashboard() {
           </div>
 
           {/* Simulation Live Telemetry Status */}
-          {simulation.active && (
+          {Boolean(simulation?.active) && (
             <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               <div className="bg-black/20 p-2.5 rounded-lg">
                 <span className="text-slate-400 block text-[11px]">Active Drill Type:</span>
-                <span className="font-extrabold text-red-300">{simulation.disasterType} ({simulation.severity})</span>
+                <span className="font-extrabold text-red-300">
+                  {toSafeString(simulation?.disasterType, 'Cyclone')} ({toSafeString(simulation?.severity, 'High')})
+                </span>
               </div>
               <div className="bg-black/20 p-2.5 rounded-lg">
                 <span className="text-slate-400 block text-[11px]">Affected Zone:</span>
-                <span className="font-extrabold text-white truncate">{simulation.affectedArea}</span>
+                <span className="font-extrabold text-white truncate">{toSafeString(simulation?.affectedArea, 'Coastal Zone')}</span>
               </div>
               <div className="bg-black/20 p-2.5 rounded-lg">
                 <span className="text-slate-400 block text-[11px]">Generated Influx:</span>
-                <span className="font-extrabold text-amber-300">+{simulation.metrics.addedRequests} Requests</span>
+                <span className="font-extrabold text-amber-300">+{Number(simulation?.metrics?.addedRequests) || 0} Requests</span>
               </div>
               <div className="bg-black/20 p-2.5 rounded-lg">
                 <span className="text-slate-400 block text-[11px]">Displaced Individuals:</span>
-                <span className="font-extrabold text-emerald-300">+{simulation.metrics.addedVictims} Trapped</span>
+                <span className="font-extrabold text-emerald-300">+{Number(simulation?.metrics?.addedVictims) || 0} Trapped</span>
               </div>
             </div>
           )}

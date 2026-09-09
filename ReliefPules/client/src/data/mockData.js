@@ -765,7 +765,7 @@ export const runAiTriage = ({
 
 // Simulation State Engine for Live Presentations & Evaluations
 export const getSimulationState = () => {
-  return getStoredData(STORAGE_KEYS.SIMULATION, {
+  const defaultState = {
     active: false,
     paused: false,
     disasterType: 'Cyclone',
@@ -778,29 +778,89 @@ export const getSimulationState = () => {
       shelterOccupancyDelta: 0,
       assignedVolunteers: 0
     }
-  });
+  };
+
+  const stored = getStoredData(STORAGE_KEYS.SIMULATION, defaultState);
+  if (!stored || typeof stored !== 'object') {
+    return defaultState;
+  }
+
+  // Extract / sanitize disasterType and severity if they were stored as an object
+  let disasterType = stored.disasterType;
+  let severity = stored.severity;
+
+  if (typeof disasterType === 'object' && disasterType !== null) {
+    if (disasterType.severity && (!severity || typeof severity === 'object')) {
+      severity = disasterType.severity;
+    }
+    disasterType = disasterType.disasterType || 'Cyclone';
+  }
+
+  if (typeof severity === 'object' && severity !== null) {
+    severity = severity.severity || 'High';
+  }
+
+  const cleanState = {
+    ...defaultState,
+    ...stored,
+    disasterType: typeof disasterType === 'string' ? disasterType : 'Cyclone',
+    severity: typeof severity === 'string' ? severity : 'High',
+    affectedArea: typeof stored.affectedArea === 'string' ? stored.affectedArea : defaultState.affectedArea,
+    metrics: {
+      ...defaultState.metrics,
+      ...(stored.metrics && typeof stored.metrics === 'object' ? stored.metrics : {})
+    }
+  };
+
+  // If localStorage had corrupted object format, overwrite it with cleaned version
+  if (typeof stored.disasterType === 'object' || typeof stored.severity === 'object') {
+    try {
+      localStorage.setItem(STORAGE_KEYS.SIMULATION, JSON.stringify(cleanState));
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  return cleanState;
 };
 
 export const setSimulationState = (state) => {
   setStoredData(STORAGE_KEYS.SIMULATION, state);
 };
 
-export const startSimulation = (disasterType = 'Cyclone') => {
+export const startSimulation = (config = 'Cyclone') => {
   const current = getSimulationState();
+  let disasterType = 'Cyclone';
+  let severity = 'High';
+
+  if (typeof config === 'object' && config !== null) {
+    disasterType = config.disasterType || 'Cyclone';
+    severity = config.severity || (disasterType === 'Cyclone' ? 'High' : disasterType === 'Flood' ? 'Critical' : 'High');
+  } else if (typeof config === 'string') {
+    disasterType = config;
+    severity = disasterType === 'Cyclone' ? 'High' : disasterType === 'Flood' ? 'Critical' : 'High';
+  }
+
+  const areaMap = {
+    Cyclone: 'Coastal Belt & Port Sector',
+    Flood: 'River Basin & Lowland Colonies',
+    Earthquake: 'Urban Fault Zone'
+  };
+
   const newState = {
     ...current,
     active: true,
     paused: false,
     disasterType,
-    severity: disasterType === 'Cyclone' ? 'High' : disasterType === 'Flood' ? 'Critical' : 'High',
-    affectedArea: disasterType === 'Cyclone' ? 'Coastal Belt & Port Sector' : disasterType === 'Flood' ? 'River Basin & Lowland Colonies' : 'Urban Fault Zone'
+    severity,
+    affectedArea: areaMap[disasterType] || 'Disaster Incident Buffer Zone'
   };
   setSimulationState(newState);
 
   addNotification({
     type: 'alert',
     title: `LIVE SIMULATION STARTED: ${disasterType}`,
-    message: `Controlled disaster drill active for ${newState.affectedArea}. Live metrics updating.`,
+    message: `Controlled disaster drill active for ${newState.affectedArea} (${severity} Severity). Live metrics updating.`,
     link: '/admin/dashboard'
   });
 

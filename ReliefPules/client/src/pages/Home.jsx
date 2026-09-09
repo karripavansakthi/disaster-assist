@@ -141,7 +141,7 @@ export default function Home() {
           <div className="max-w-[1400px] mx-auto w-full flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
-              <span>LIVE DISASTER SIMULATION DRILL ACTIVE: <strong>{simulation.disasterType}</strong> ({simulation.severity} Severity) in {simulation.affectedArea}</span>
+              <span>LIVE DISASTER SIMULATION DRILL ACTIVE: <strong>{typeof simulation.disasterType === 'string' ? simulation.disasterType : (simulation.disasterType?.disasterType || 'Cyclone')}</strong> ({typeof simulation.severity === 'string' ? simulation.severity : (simulation.severity?.severity || 'High')} Severity) in {typeof simulation.affectedArea === 'string' ? simulation.affectedArea : 'Coastal Zone'}</span>
             </div>
             <Link
               to="/admin/dashboard"
